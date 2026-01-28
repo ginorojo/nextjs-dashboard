@@ -6,10 +6,10 @@ import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
 import postgres from "postgres";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
-
 async function getUser(email: string): Promise<User | undefined> {
   try {
+    // Se movió esta línea aquí adentro para que use las variables de Vercel en tiempo de ejecución
+    const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
     const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
     return user[0];
   } catch (error) {
@@ -33,10 +33,9 @@ export const { auth, signIn, signOut } = NextAuth({
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;
-
         }
 
-        console.log('Invalid credentials');
+        console.log("Invalid credentials");
         return null;
       },
     }),
