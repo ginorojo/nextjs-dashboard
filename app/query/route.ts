@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'; // Agrega esto arriba de todo
 import postgres from 'postgres';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
